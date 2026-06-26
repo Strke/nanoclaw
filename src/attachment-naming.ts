@@ -48,6 +48,8 @@ const TYPE_TO_EXT: Record<string, string> = {
   animation: 'mp4',
 };
 
+
+
 export function extForMime(mime: unknown): string {
   if (typeof mime !== 'string' || !mime) return '';
   const clean = mime.split(';')[0].trim().toLowerCase();
