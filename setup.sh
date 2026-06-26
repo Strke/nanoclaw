@@ -7,6 +7,8 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+
+
 # Where verbose bootstrap logs go. nanoclaw.sh captures setup.sh's stdout to
 # the per-step raw log, but legacy code in this script + install-node.sh
 # also calls `log` which writes to a file. Route those to the raw log so
