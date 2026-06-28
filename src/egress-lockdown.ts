@@ -84,6 +84,8 @@ export function ensureEgressNetwork(): boolean {
     return true;
   }
 
+
+  
   throw new EgressLockdownError(
     `the OneCLI gateway "${ONECLI_GATEWAY_CONTAINER}" could not be attached to "${EGRESS_NETWORK}"`,
   );
