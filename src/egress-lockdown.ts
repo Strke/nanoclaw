@@ -64,11 +64,7 @@ function gatewayAttached(): boolean {
 export function ensureEgressNetwork(): boolean {
   if (!EGRESS_LOCKDOWN) return false;
 
-  if (
-    !dockerOk(['network', 'inspect', EGRESS_NETWORK]) &&
-    !dockerOk(['network', 'create', '--internal', EGRESS_NETWORK])
-  ) {
-    throw new EgressLockdownError(`the "${EGRESS_NETWORK}" internal network could not be created`);
+  if (gressLockdownError(`the "${EGRESS_NETWORK}" internal network could not be created`);
   }
 
   if (gatewayAttached()) return true;
