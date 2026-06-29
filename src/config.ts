@@ -5,17 +5,16 @@ import { readEnvFile } from './env.js';
 import { getContainerImageBase, getDefaultContainerImage, getInstallSlug } from './install-slug.js';
 import { isValidTimezone } from './timezone.js';
 
-// Read config values from
-
+// Read config values from .env (falls back to process.env).
+const envConfig = readEnvFile(['ASSISTANT_NAME', 'ASSISTANT_HAS_OWN_NUMBER', 'ONECLI_URL', 'ONECLI_API_KEY', 'TZ']);
 
 export const ASSISTANT_NAME = process.env.ASSISTANT_NAME || envConfig.ASSISTANT_NAME || 'Andy';
 export const ASSISTANT_HAS_OWN_NUMBER =
   (process.env.ASSISTANT_HAS_OWN_NUMBER || envConfig.ASSISTANT_HAS_OWN_NUMBER) === 'true';
 
 // Absolute paths needed for container mounts
-
-
-
+const PROJECT_ROOT = process.cwd();
+const HOME_DIR = process.env.HOME || os.homedir();
 
 // Mount security: allowlist stored OUTSIDE project root, never mounted into containers
 export const MOUNT_ALLOWLIST_PATH = path.join(HOME_DIR, '.config', 'nanoclaw', 'mount-allowlist.json');
