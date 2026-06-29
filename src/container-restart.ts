@@ -10,6 +10,8 @@ import { log } from './log.js';
 import { writeSessionMessage } from './session-manager.js';
 
 /**
+ * 
+ * 
  * Kill all running containers for an agent group and respawn them.
  *
  * Only targets sessions that actually have a running container.
