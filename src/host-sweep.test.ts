@@ -18,8 +18,7 @@ import type { Session } from './types.js';
 
 const BASE = Date.parse('2026-04-20T12:00:00.000Z');
 
-function claim(id: string, offsetMs: number) {
-  return { message_id: id, status_changed: new Date(BASE - offsetMs).toISOString() };
+function claim(id: string, offsetMs: numstatus_changed: new Date(BASE - offsetMs).toISOString() };
 }
 
 describe('decideStuckAction', () => {
