@@ -15,8 +15,6 @@ describe('resolveProviderName', () => {
     expect(resolveProviderName(null, undefined)).toBe('claude');
   });
 
-
-  
   it('lowercases the resolved name', () => {
     expect(resolveProviderName('CODEX', null)).toBe('codex');
     expect(resolveProviderName(null, 'Claude')).toBe('claude');
