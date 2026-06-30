@@ -54,7 +54,7 @@ export function getTriggerPattern(trigger?: string): RegExp {
   return buildTriggerPattern(normalizedTrigger || DEFAULT_TRIGGER);
 }
 
-export const TRIGGER_PATTERN = buildTriggerPattern(DEFAULT_TRIGGER);
+export const TRIGGER_PATTERN = buildTPattern(DEFAULT_TRIGGER);
 
 // Timezone for scheduled tasks, message formatting, etc.
 // Validates each candidate is a real IANA identifier before accepting.
