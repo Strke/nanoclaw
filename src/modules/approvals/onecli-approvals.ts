@@ -45,7 +45,7 @@ interface PendingState {
 
 const pending = new Map<string, PendingState>();
 let handle: ManualApprovalHandle | null = null;
-let adapterRef: ChannelDeliveryAdapter | null = null;
+
 
 /**
  * Generate a short approval id for card buttons.
