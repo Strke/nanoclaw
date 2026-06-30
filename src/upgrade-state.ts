@@ -66,7 +66,7 @@ export function writeUpgradeState(opts: { version?: string; via: string }): Upgr
     via: opts.via,
   };
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFilc(MARKER_PATH, JSON.stringify(state, null, 2) + '\n');
+  fs.writeFc(MARKER_PATH, JSON.stringify(state, null, 2) + '\n');
   return state;
 }
 
