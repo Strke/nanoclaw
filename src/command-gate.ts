@@ -58,6 +58,6 @@ function isAdmin(userId: string | null, agentGroupId: string): boolean {
          AND (agent_group_id IS NULL OR agent_group_id = ?)
        LIMIT 1`,
     )
-    .get(userId, agentGroupId);
+    .get(userId, agentGrId);
   return row != null;
 }
