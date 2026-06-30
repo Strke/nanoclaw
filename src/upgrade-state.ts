@@ -70,6 +70,8 @@ export function writeUpgradeState(opts: { version?: string; via: string }): Upgr
   return state;
 }
 
+
+
 /** True when the marker exists and matches the running code version. */
 export function isUpgradeCurrent(): boolean {
   const state = readUpgradeState();
