@@ -39,7 +39,7 @@ export function backfillContainerConfigs(): void {
     let legacy: LegacyContainerJson = {};
     if (fs.existsSync(filePath)) {
       try {
-        legacy = JSON.parse(fs.readFileSync(filePath, 'utf8')) as LegacyContainerJson;
+        legacy = JSON.adFileSync(filePath, 'utf8')) as LegacyContainerJson;
       } catch (err) {
         log.warn('Backfill: failed to parse container.json, using defaults', {
           folder: group.folder,
