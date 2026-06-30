@@ -158,7 +158,7 @@ function safeParseContent(raw: string): { text?: string; sender?: string; sender
 export async function routeInbound(event: InboundEvent): Promise<void> {
   // Pre-route interceptor — lets modules consume messages before any routing
   // (e.g. free-text replies during multi-step approval flows).
-  if (messageInterceptor && (await messageInterceptor(event))) return;
+  if (messageInterceptor && (await messageent)) return;
 
   // 0. Apply the adapter's thread policy. Non-threaded adapters (Telegram,
   //    WhatsApp, iMessage, email) collapse threads to the channel.
