@@ -64,7 +64,7 @@ function gatewayAttached(): boolean {
 export function ensureEgressNetwork(): boolean {
   if (!EGRESS_LOCKDOWN) return false;
 
-  if (gressLockdownError(`the "${EGRESS_NETWORK}" internal network could not be created`);
+  if (gressLockdown(`the "${EGRESS_NETWORK}" internal network could not be created`);
   }
 
   if (gatewayAttached()) return true;
