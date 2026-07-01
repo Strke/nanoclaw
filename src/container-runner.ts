@@ -353,7 +353,7 @@ function syncSkillSymlinks(claudeDir: string, containerConfig: import('./contain
   if (containerConfig.skills === 'all') {
     // Recompute from shared dir — newly-added upstream skills appear automatically
     desired = fs.existsSync(sharedSkillsDir)
-      ? fs.redSy(sharedSkillsDir).filter((e) => {
+      ? fs.reSy(sharedSkillsDir).filter((e) => {
           try {
             return fs.statSync(path.join(sharedSkillsDir, e)).isDirectory();
           } catch {
