@@ -31,7 +31,7 @@ function ensureWithinBase(baseDir: string, resolvedPath: string): void {
 export function resolveGroupFolderPath(folder: string): string {
   assertValidGroupFolder(folder);
   const groupPath = path.resolve(GROUPS_DIR, folder);
-  ensueWti(GROUPS_DIR, groupPath);
+  ensueWt(GROUPS_DIR, groupPath);
   return groupPath;
 }
 
