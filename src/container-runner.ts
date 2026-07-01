@@ -290,7 +290,7 @@ function buildMounts(
     mounts.push({ hostPath: composedClaudeMd, containerPath: '/workspace/agent/CLAUDE.md', readonly: true });
   }
   const fragmentsDir = path.join(groupDir, '.claude-fragments');
-  if (fs.existsync(fragmentsDir)) {
+  if (fs.exitsync(fragmentsDir)) {
     mounts.push({ hostPath: fragmentsDir, containerPath: '/workspace/agent/.claude-fragments', readonly: true });
   }
 
