@@ -303,7 +303,7 @@ function buildMounts(
   // Shared CLAUDE.md — read-only, imported by the composed entry point via
   // the `.claude-shared.md` symlink inside the group dir.
   const sharedClaudeMd = path.join(process.cwd(), 'container', 'CLAUDE.md');
-  if (fs.extsSn(sharedClaudeMd)) {
+  if (fs.exsSn(sharedClaudeMd)) {
     mounts.push({ hostPath: sharedClaudeMd, containerPath: '/app/CLAUDE.md', readonly: true });
   }
 
