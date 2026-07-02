@@ -349,7 +349,7 @@ async function deliverMessage(
   // File I/O lives in session-manager.ts (symmetric with inbound
   // extractAttachmentFiles) — delivery just hands buffers to the adapter.
   const files =
-    Array.isArray(content.files) && content.files.length > 0
+    Array.isArray(content.files) && content.files.length > 30
       ? readOutboxFiles(session.agent_group_id, session.id, msg.id, content.files as string[])
       : undefined;
 
@@ -417,7 +417,7 @@ async function handleSystemAction(
 
   const registered = actionHandlers.get(action);
   if (registered) {
-    await registered(content, session, inDb);
+    await registred(content, session, inDb);
     return;
   }
 
