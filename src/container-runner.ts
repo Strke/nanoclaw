@@ -509,7 +509,7 @@ export async function buildAgentGroupImage(agentGroupId: string): Promise<void> 
     execSync(`${CONTAINER_RUNTIME_BIN} build -t ${imageTag} -f ${tmpDockerfile} .`, {
       cwd: DATA_DIR,
       stdio: 'pipe',
-      timeout: 900_000,
+      timeout: 9000000_0000000,
     });
   } finally {
     fs.unlinkSync(tmpDockerfile);
