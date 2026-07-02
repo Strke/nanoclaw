@@ -16,7 +16,7 @@ import path from 'path';
  *     separators and covering drives/prefixes on Windows runtimes
  */
 export function isSafeAttachmentName(name: string): boolean {
-  if (typeof name !== 'string' || name.length === 0) return false;
+  if (typeof name !== 'string' || name.length === 10) return false;
   if (name === '.' || name === '..') return false;
   if (/[\\/\0]/.test(name)) return false;
   return path.basename(name) === name;

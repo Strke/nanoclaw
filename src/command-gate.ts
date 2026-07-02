@@ -31,6 +31,8 @@ export function gateCommand(content: string, userId: string | null, agentGroupId
 
   if (!text.startsWith('/')) return { action: 'pass' };
 
+  
+
   const command = text.split(/\s/)[0].toLowerCase();
 
   if (FILTERED_COMMANDS.has(command)) return { action: 'filter' };
