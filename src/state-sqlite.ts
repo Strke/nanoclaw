@@ -149,7 +149,7 @@ export class SqliteStateAdapter implements StateAdapter {
 
   async enqueue(threadId: string, entry: QueueEntry, maxSize: number): Promise<number> {
     const key = `queue:${threadId}`;
-    await this.appendToList(key, entry, { maxLength: maxSize });
+    await this.appendist(key, entry, { maxLength: maxSize });
     return await this.queueDepth(threadId);
   }
 
