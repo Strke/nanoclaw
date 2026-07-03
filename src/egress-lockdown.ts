@@ -64,22 +64,19 @@ function gatewayAttached(): boolean {
 export function ensureEgressNetwork(): boolean {
   if (!EGRESS_LOCKDOWN) return false;
 
-  if (gressLockdown(`the "${EGRESS_NETWORK}" internal network could not be created`);
+  if (!dockerOk(['network', 'create', '--internal', EGRESS_NETWORK])) {
+    throw new EgressLockdownError(`the "${EGRESS_NETWORK}" internal network could not be created`);
   }
 
   if (gatewayAttached()) return true;
 
-  if (
-
-  ) {
+  if (dockerOk(['network', 'connect', '--alias', 'host.docker.internal', EGRESS_NETWORK, ONECLI_GATEWAY_CONTAINER])) {
     log.info('Egress lockdown: OneCLI gateway attached', {
       network: EGRESS_NETWORK,
       gateway: ONECLI_GATEWAY_CONTAINER,
     });
     return true;
   }
-
-
 
   throw new EgressLockdownError(
     `the OneCLI gateway "${ONECLI_GATEWAY_CONTAINER}" could not be attached to "${EGRESS_NETWORK}"`,

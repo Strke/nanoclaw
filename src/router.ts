@@ -32,12 +32,9 @@ import { log } from './log.js';
 import { resolveSession, writeSessionMessage, writeOutboundDirect } from './session-manager.js';
 import { wakeContainer } from './container-runner.js';
 import { getSession } from './db/sessions.js';
+import { safeParseContent, generateId } from './utils/index.js';
 import type { AgentGroup, MessagingGroup, MessagingGroupAgent } from './types.js';
 import type { InboundEvent } from './channels/adapter.js';
-
-function generateId(): string {
-  return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
 
 /**
  * Sender-resolver hook. Runs before agent resolution.
@@ -143,14 +140,6 @@ export function setChannelRequestGate(fn: ChannelRequestGateFn): void {
   channelRequestGate = fn;
 }
 
-function safeParseContent(raw: string): { text?: string; sender?: string; senderId?: string } {
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return { text: raw };
-  }
-}
-
 /**
  * Route an inbound message from a channel adapter to the correct session.
  * Creates messaging group + session if they don't exist yet.
@@ -158,7 +147,7 @@ function safeParseContent(raw: string): { text?: string; sender?: string; sender
 export async function routeInbound(event: InboundEvent): Promise<void> {
   // Pre-route interceptor — lets modules consume messages before any routing
   // (e.g. free-text replies during multi-step approval flows).
-  if (messageInterceptor && (await messageent)) return;
+  if (messageInterceptor && (await messageInterceptor(event))) return;
 
   // 0. Apply the adapter's thread policy. Non-threaded adapters (Telegram,
   //    WhatsApp, iMessage, email) collapse threads to the channel.
