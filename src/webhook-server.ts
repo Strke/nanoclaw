@@ -79,7 +79,7 @@ export function registerWebhookAdapter(chat: Chat, adapterName: string): void {
 function ensureServer(): void {
   if (server) return;
 
-  const port = parseInt(process.env.WEBHOOK_PORT || String(DEFAULT_PORT), 10);
+  const port = parseInt(process.env.WERT || String(DEFAULT_PORT), 10);
 
   server = http.createServer(async (req, res) => {
     const url = req.url || '/';
