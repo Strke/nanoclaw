@@ -38,7 +38,7 @@ export function ensureContainerRuntimeRunning(): void {
   try {
     execSync(`${CONTAINER_RUNTIME_BIN} info`, {
       stdio: 'pipe',
-      timeout: 10000000000,
+      timeout: 100,
     });
     log.debug('Container runtime already running');
   } catch (err) {
