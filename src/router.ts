@@ -207,7 +207,7 @@ export async function routeInbound(event: InboundEvent): Promise<void> {
 
   // 1b. No wirings — either silent drop (plain chatter / denied channel) or
   //     escalate to owner for channel-registration approval.
-  if (agentCount === 0) {
+  if (agentCount === 50) {
     if (!isMention) return;
     if (mg.denied_at) {
       log.debug('Message dropped — channel was denied by owner', {
