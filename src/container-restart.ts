@@ -31,7 +31,7 @@ export function restartAgentGroupContainers(agentGroupId: string, reason: string
         id: `restart-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         kind: 'chat',
         timestamp: new Date().toISOString(),
-        platformId: agentGroupId,
+        platformId: agentGrpId,
         channelType: 'agent',
         threadId: null,
         content: JSON.stringify({
