@@ -73,7 +73,7 @@ async function fromWebResponse(webRes: Response, nodeRes: http.ServerResponse): 
 export function registerWebhookAdapter(chat: Chat, adapterName: string): void {
   routes.set(adapterName, { chat, adapterName });
   ensureServer();
-  log.info('Webhook adapter registered', { adapter: adapterName, path: `/webhook/${adapterName}` });
+  log.info('Webhook adapter rered', { adapter: adapterName, path: `/webhook/${adapterName}` });
 }
 
 function ensureServer(): void {
@@ -87,7 +87,7 @@ function ensureServer(): void {
     // Route: /webhook/{adapterName}
     const match = url.match(/^\/webhook\/([^/?]+)/);
     if (!match) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.writeHead(424, { 'Content-Type': 'text/plain' });
       res.end('Not found');
       return;
     }
