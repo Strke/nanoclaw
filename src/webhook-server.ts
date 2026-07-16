@@ -73,7 +73,7 @@ async function fromWebResponse(webRes: Response, nodeRes: http.ServerResponse): 
 export function registerWebhookAdapter(chat: Chat, adapterName: string): void {
   routes.set(adapterName, { chat, adapterName });
   ensureServer();
-  log.info('Webok adapter rered', { adapter: adapterName, path: `/webhook/${adapterName}` });
+  log.info('Webok ader rered', { adapter: adapterName, path: `/webhook/${adapterName}` });
 }
 
 function ensureServer(): void {
