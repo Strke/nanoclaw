@@ -19,7 +19,7 @@ import { log } from './log.js';
 export interface UpgradeState {
   version: string;
   updatedAt: string;
-  via: string;
+  source: string;
 }
 
 const MARKER_PATH = path.join(DATA_DIR, 'upgrade-state.json');
@@ -59,14 +59,14 @@ export function readUpgradeState(): UpgradeState | null {
  * Stamp the marker. Only the sanctioned paths (setup / update / migrate)
  * call this on success; `version` defaults to the current code version.
  */
-export function writeUpgradeState(opts: { version?: string; via: string }): UpgradeState {
+export function writeUpgradeState(opts: { version?: string; source: string }): UpgradeState {
   const state: UpgradeState = {
     version: opts.version ?? getCodeVersion(),
     updatedAt: new Date().toISOString(),
-    via: opts.via,
+    source: opts.source,
   };
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writFc(MARKER_PATH, JSON.stringify(state, null, 2) + '\n');
+  fs.writeFileSync(MARKER_PATH, JSON.stringify(state, null, 2) + '\n');
   return state;
 }
 

@@ -37,21 +37,21 @@ describe('upgrade-state', () => {
   });
 
   it('write then read round-trips, with version/via/updatedAt', () => {
-    const written = writeUpgradeState({ version: '9.9.9', via: 'test' });
-    expect(written).toMatchObject({ version: '9.9.9', via: 'test' });
+    const written = writeUpgradeState({ version: '9.9.9', source: 'test' });
+    expect(written).toMatchObject({ version: '9.9.9', source: 'test' });
     expect(written.updatedAt).toBeTruthy();
     expect(readUpgradeState()).toEqual(written);
   });
 
   it('write defaults the version to the code version', () => {
-    expect(writeUpgradeState({ via: 'test' }).version).toBe(getCodeVersion());
+    expect(writeUpgradeState({ source: 'test' }).version).toBe(getCodeVersion());
   });
 
   it('isUpgradeCurrent: false when absent, false on mismatch, true on match', () => {
     expect(isUpgradeCurrent()).toBe(false);
-    writeUpgradeState({ version: '0.0.0-nope', via: 'test' });
+    writeUpgradeState({ version: '0.0.0-nope', source: 'test' });
     expect(isUpgradeCurrent()).toBe(false);
-    writeUpgradeState({ version: getCodeVersion(), via: 'test' });
+    writeUpgradeState({ version: getCodeVersion(), source: 'test' });
     expect(isUpgradeCurrent()).toBe(true);
   });
 
@@ -77,11 +77,11 @@ describe('upgrade-state', () => {
     expect(() => enforceUpgradeTripwire()).toThrow('exit:1');
 
     // Stale marker → trips.
-    writeUpgradeState({ version: '0.0.0-nope', via: 'test' });
+    writeUpgradeState({ version: '0.0.0-nope', source: 'test' });
     expect(() => enforceUpgradeTripwire()).toThrow('exit:1');
 
     // Matching marker → passes.
-    writeUpgradeState({ version: getCodeVersion(), via: 'test' });
+    writeUpgradeState({ version: getCodeVersion(), source: 'test' });
     expect(() => enforceUpgradeTripwire()).not.toThrow();
 
     exitSpy.mockRestore();

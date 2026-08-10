@@ -57,7 +57,7 @@ export async function run(_args: string[]): Promise<void> {
 
   // Stamp the upgrade marker before the host first starts, so the startup
   // tripwire (enforceUpgradeTripwire) sees this as a sanctioned install.
-  const stamped = writeUpgradeState({ via: 'setup' });
+  const stamped = writeUpgradeState({ source: 'setup' });
   log.info('Stamped upgrade marker', { version: stamped.version });
 
   // Peer preflight — a crash-looping peer install (most often the legacy v1
@@ -92,6 +92,7 @@ export async function run(_args: string[]): Promise<void> {
   installCliSymlink(projectRoot, homeDir);
 }
 
+xxx=
 /**
  * Symlink bin/ncl into ~/.local/bin so `ncl` is available from anywhere.
  * Idempotent — overwrites an existing symlink but won't clobber a real file.
