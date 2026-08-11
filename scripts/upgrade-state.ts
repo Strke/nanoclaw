@@ -18,7 +18,7 @@ if (cmd === 'get') {
   const state = readUpgradeState();
   console.log(state ? JSON.stringify(state) : 'none');
 } else if (cmd === 'set') {
-  const state = writeUpgradeState({ version: versionArg || getCodeVersion(), via: viaArg || 'manual' });
+  const state = writeUpgradeState({ version: versionArg || getCodeVersion(), source: viaArg || 'manual' });
   console.log(`Stamped ${markerPath()}: ${JSON.stringify(state)}`);
 } else {
   console.error('Usage: pnpm exec tsx scripts/upgrade-state.ts get | set [version] [via]');
