@@ -21,6 +21,7 @@ import {
   migrateDeliveredTable,
 } from './db/session-db.js';
 import { log } from './log.js';
+import { incrementCounter, observeLatency } from './modules/metrics/index.js';
 import { normalizeOptions } from './channels/ask-question.js';
 import { clearOutbox, openInboundDb, openOutboundDb, readOutboxFiles } from './session-manager.js';
 import { pauseTypingRefreshAfterDelivery, setTypingAdapter } from './modules/typing/index.js';
@@ -192,6 +193,7 @@ async function drainSession(session: Session): Promise<void> {
         const platformMsgId = await deliverMessage(msg, session, inDb);
         markDelivered(inDb, msg.id, platformMsgId ?? null);
         deliveryAttempts.delete(msg.id);
+        incrementCounter('delivery.delivered');
 
         // Pause the typing indicator after a real user-facing message
         // lands on the user's screen, so the client has time to visually
@@ -214,6 +216,7 @@ async function drainSession(session: Session): Promise<void> {
           });
           markDeliveryFailed(inDb, msg.id);
           deliveryAttempts.delete(msg.id);
+          incrementCounter('delivery.failed');
         } else {
           log.warn('Message delivery failed, will retry', {
             messageId: msg.id,
@@ -222,6 +225,7 @@ async function drainSession(session: Session): Promise<void> {
             maxAttempts: MAX_DELIVERY_ATTEMPTS,
             err,
           });
+          incrementCounter('delivery.retried');
         }
       }
     }
@@ -244,6 +248,7 @@ async function deliverMessage(
   session: Session,
   inDb: Database.Database,
 ): Promise<string | undefined> {
+  const startedAt = Date.now();
   if (!deliveryAdapter) {
     log.warn('No delivery adapter configured, dropping message', { id: msg.id });
     return;
@@ -371,6 +376,7 @@ async function deliverMessage(
 
   clearOutbox(session.agent_group_id, session.id, msg.id);
 
+  observeLatency('delivery.deliver_ms', startedAt);
   return platformMsgId;
 }
 

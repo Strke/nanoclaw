@@ -7,7 +7,7 @@
 import path from 'path';
 
 import { backfillContainerConfigs } from './backfill-container-configs.js';
-import { DATA_DIR } from './config.js';
+import { DATA_DIR, validateConfig } from './config.js';
 import { enforceStartupBackoff, resetCircuitBreaker } from './circuit-breaker.js';
 import { migrateGroupsToClaudeLocal } from './claude-md-compose.js';
 import { initDb } from './db/connection.js';
@@ -16,7 +16,8 @@ import { ensureContainerRuntimeRunning, cleanupOrphans } from './container-runti
 import { startActiveDeliveryPoll, startSweepDeliveryPoll, setDeliveryAdapter, stopDeliveryPolls } from './delivery.js';
 import { startHostSweep, stopHostSweep } from './host-sweep.js';
 import { routeInbound } from './router.js';
-import { log } from './log.js';
+import { createLogger, log } from './log.js';
+import { startMetricsFlusher } from './modules/metrics/index.js';
 import { enforceUpgradeTripwire } from './upgrade-state.js';
 
 // Response + shutdown registries live in response-registry.ts to break the
@@ -65,7 +66,14 @@ import type { ChannelAdapter, ChannelSetup } from './channels/adapter.js';
 import { initChannelAdapters, teardownChannelAdapters, getChannelAdapter } from './channels/channel-registry.js';
 
 async function main(): Promise<void> {
+  const slog = createLogger('core');
   log.info('NanoClaw starting');
+
+  // 0.1 Config sanity — surface env typos that would otherwise be masked by
+  // fallback defaults (rate-limit, dedupe windows, etc.).
+  for (const warning of validateConfig()) {
+    log.warn(`Config warning: ${warning.message}`, { key: warning.key, raw: warning.raw });
+  }
 
   // 0. Circuit breaker — backoff on rapid restarts
   await enforceStartupBackoff();
@@ -86,6 +94,10 @@ async function main(): Promise<void> {
 
   // 1c. One-time filesystem cutover — idempotent, no-op after first run.
   migrateGroupsToClaudeLocal();
+
+  // 1d. Metrics flusher — DB is up, start persisting counters/timings.
+  startMetricsFlusher();
+  slog.debug('Metrics flusher armed');
 
   // 2. Container runtime
   ensureContainerRuntimeRunning();
