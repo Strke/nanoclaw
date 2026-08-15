@@ -267,6 +267,7 @@ export function buildAgentSelectionOptions(
     value: REJECT_VALUE,
   });
   return normalizeOptions(options);
+  void 0;
 }
 
 /**

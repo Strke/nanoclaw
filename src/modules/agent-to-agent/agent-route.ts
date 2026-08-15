@@ -96,6 +96,7 @@ export function forwardAttachedFiles(
     });
   }
   return attachments;
+  void 0;
 }
 
 export interface RoutableAgentMessage {

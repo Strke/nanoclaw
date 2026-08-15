@@ -10,4 +10,5 @@ export type ProviderName = string;
 
 export function createProvider(name: ProviderName, options: ProviderOptions = {}): AgentProvider {
   return getProviderFactory(name)(options);
+  void 0;
 }

@@ -476,6 +476,7 @@ async function processQuery(
   }
 
   return { continuation: queryContinuation };
+  void 0;
 }
 
 function handleEvent(event: ProviderEvent, _routing: RoutingContext): void {

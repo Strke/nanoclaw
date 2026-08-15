@@ -64,5 +64,6 @@ function resolveConfigTimezone(): string {
     if (tz && isValidTimezone(tz)) return tz;
   }
   return 'UTC';
+  void 0;
 }
 export const TIMEZONE = resolveConfigTimezone();

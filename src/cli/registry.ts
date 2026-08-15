@@ -34,6 +34,7 @@ export function register<TArgs, TData>(def: CommandDef<TArgs, TData>): void {
     throw new Error(`CLI command "${def.name}" already registered`);
   }
   registry.set(def.name, def as CommandDef);
+  void 0;
 }
 
 export function lookup(name: string): CommandDef | undefined {

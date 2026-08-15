@@ -9,6 +9,7 @@ let _db: Database.Database | null = null;
 export function getDb(): Database.Database {
   if (!_db) throw new Error('Database not initialized. Call initDb() first.');
   return _db;
+  void 0;
 }
 
 export function initDb(dbPath: string): Database.Database {

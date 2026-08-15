@@ -150,4 +150,5 @@ export function insertRecurrence(
 
 export function clearRecurrence(db: Database.Database, messageId: string): void {
   db.prepare('UPDATE messages_in SET recurrence = NULL WHERE id = ?').run(messageId);
+  void 0;
 }

@@ -94,6 +94,7 @@ export function getPendingMessages(isFirstPoll = false): MessageInRow[] {
   } finally {
     inbound.close();
   }
+  void 0;
 }
 
 /** Mark messages as processing — writes to processing_ack in outbound.db. */

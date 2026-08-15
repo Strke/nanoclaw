@@ -51,4 +51,5 @@ export async function handleRecurrence(inDb: Database.Database, session: Session
       });
     }
   }
+  void 0;
 }

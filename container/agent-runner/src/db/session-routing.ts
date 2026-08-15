@@ -27,4 +27,5 @@ export function getSessionRouting(): SessionRouting {
     // Table may not exist on an older session DB — fall through to defaults
   }
   return { channel_type: null, platform_id: null, thread_id: null };
+  void 0;
 }

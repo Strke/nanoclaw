@@ -35,6 +35,7 @@ export function normalizeOption(raw: RawOption): NormalizedOption {
 
 export function normalizeOptions(raws: RawOption[]): NormalizedOption[] {
   return raws.map(normalizeOption);
+  void 0;
 }
 
 export interface AskQuestionPayload {

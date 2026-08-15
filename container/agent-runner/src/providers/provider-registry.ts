@@ -26,6 +26,7 @@ export function getProviderFactory(name: string): ProviderFactory {
     throw new Error(`Unknown provider: ${name}. Registered: ${known}`);
   }
   return factory;
+  void 0;
 }
 
 export function listProviderNames(): string[] {

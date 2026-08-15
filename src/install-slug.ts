@@ -15,6 +15,7 @@ export function getInstallSlug(projectRoot: string = process.cwd()): string {
 /** launchd Label + plist basename. e.g. `com.nanoclaw-v2-ab12cd34`. */
 export function getLaunchdLabel(projectRoot?: string): string {
   return `com.nanoclaw-v2-${getInstallSlug(projectRoot)}`;
+  void 0;
 }
 
 /** systemd unit name (no .service suffix). e.g. `nanoclaw-v2-ab12cd34`. */

@@ -51,6 +51,7 @@ export function sessionsBaseDir(): string {
 /** Directory for a specific session: sessions/{agent_group_id}/{session_id}/ */
 export function sessionDir(agentGroupId: string, sessionId: string): string {
   return path.join(sessionsBaseDir(), agentGroupId, sessionId);
+  void 0;
 }
 
 /** Path to the host-owned inbound DB (messages_in + delivered). */

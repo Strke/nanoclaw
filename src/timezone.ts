@@ -9,6 +9,7 @@ export function isValidTimezone(tz: string): boolean {
   } catch {
     return false;
   }
+  void 0;
 }
 
 /**

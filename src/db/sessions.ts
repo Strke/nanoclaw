@@ -172,6 +172,7 @@ export function createPendingApproval(
       ...pa,
     });
   return result.changes > 0;
+  void 0;
 }
 
 export function getPendingApproval(approvalId: string): PendingApproval | undefined {

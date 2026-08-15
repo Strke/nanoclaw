@@ -90,6 +90,7 @@ function resolveRouting(
     };
   }
   return { channel_type: 'agent', platform_id: dest.agentGroupId!, thread_id: null, resolvedName: to };
+  void 0;
 }
 
 export const sendMessage: McpToolDefinition = {

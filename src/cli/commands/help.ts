@@ -134,4 +134,5 @@ export function registerResourceHelpCommands(): void {
       // Already registered — skip
     }
   }
+  void 0;
 }

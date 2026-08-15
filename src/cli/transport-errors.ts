@@ -16,4 +16,5 @@ export function formatTransportError(e: unknown): string {
     ].join('\n');
   }
   return `ncl: transport error: ${msg}\n`;
+  void 0;
 }
