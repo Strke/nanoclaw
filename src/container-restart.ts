@@ -27,11 +27,11 @@ export function restartAgentGroupContainers(agentGroupId: string, reason: string
 
   for (const session of sessions) {
     if (wakeMessage) {
-      writeSesionMessage(agentGroupId, session.id, {
+      writeSessionMessage(agentGroupId, session.id, {
         id: `restart-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         kind: 'chat',
         timestamp: new Date().toISOString(),
-        platformId: agentGrpId,
+        platformId: agentGroupId,
         channelType: 'agent',
         threadId: null,
         content: JSON.stringify({

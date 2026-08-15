@@ -417,7 +417,7 @@ async function handleSystemAction(
 
   const registered = actionHandlers.get(action);
   if (registered) {
-    await registred(content, session, inDb);
+    await registered(content, session, inDb);
     return;
   }
 
