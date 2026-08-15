@@ -19,6 +19,15 @@
  */
 import { getChannelAdapter } from './channels/channel-registry.js';
 import { gateCommand } from './command-gate.js';
+import {
+  DEDUPE_ENABLED,
+  DEDUPE_MAX_ENTRIES,
+  DEDUPE_TTL_MS,
+  RATE_LIMIT_ENABLED,
+  RATE_LIMIT_MAX_MESSAGES,
+  RATE_LIMIT_WINDOW_MS,
+} from './config.js';
+import { isDuplicate } from './dedupe.js';
 import { getAgentGroup } from './db/agent-groups.js';
 import { recordDroppedMessage } from './db/dropped-messages.js';
 import {
@@ -27,13 +36,17 @@ import {
   getMessagingGroupWithAgentCount,
 } from './db/messaging-groups.js';
 import { findSessionForAgent } from './db/sessions.js';
+import { createLogger, log } from './log.js';
+import { incrementCounter, observeLatency } from './modules/metrics/index.js';
 import { startTypingRefresh, stopTypingRefresh } from './modules/typing/index.js';
-import { log } from './log.js';
+import { checkRateLimit } from './rate-limit.js';
 import { resolveSession, writeSessionMessage, writeOutboundDirect } from './session-manager.js';
 import { wakeContainer } from './container-runner.js';
 import { getSession } from './db/sessions.js';
 import type { AgentGroup, MessagingGroup, MessagingGroupAgent } from './types.js';
 import type { InboundEvent } from './channels/adapter.js';
+
+const rlog = createLogger('router');
 
 function generateId(): string {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -156,6 +169,9 @@ function safeParseContent(raw: string): { text?: string; sender?: string; sender
  * Creates messaging group + session if they don't exist yet.
  */
 export async function routeInbound(event: InboundEvent): Promise<void> {
+  const startedAt = Date.now();
+  incrementCounter('router.inbound_total');
+
   // Pre-route interceptor — lets modules consume messages before any routing
   // (e.g. free-text replies during multi-step approval flows).
   if (messageInterceptor && (await messageent)) return;
@@ -168,6 +184,54 @@ export async function routeInbound(event: InboundEvent): Promise<void> {
   }
 
   const isMention = event.message.isMention === true;
+
+  // 0a. Dedupe guard — drop replays of an already-seen platform message id
+  //     before any DB work (adapter redelivery, retry storms). In-memory
+  //     LRU, no central-DB write on the hot path.
+  const rawMessageId = event.message.id;
+  if (
+    rawMessageId &&
+    isDuplicate(`${event.channelType}:${rawMessageId}`, {
+      enabled: DEDUPE_ENABLED,
+      maxEntries: DEDUPE_MAX_ENTRIES,
+      ttlMs: DEDUPE_TTL_MS,
+    })
+  ) {
+    rlog.debug('Duplicate inbound message dropped', { channelType: event.channelType, messageId: rawMessageId });
+    incrementCounter('router.duplicate_dropped');
+    return;
+  }
+
+  // 0b. Rate-limit guard — sliding window per (channel_type, platform_id).
+  //     Applies only to messages that would actually reach an agent
+  //     (mentions/DMs); plain chatter already returns silently below and
+  //     shouldn't burn a chat's budget.
+  if (isMention) {
+    const decision = checkRateLimit(`${event.channelType}:${event.platformId}`, {
+      enabled: RATE_LIMIT_ENABLED,
+      maxMessages: RATE_LIMIT_MAX_MESSAGES,
+      windowMs: RATE_LIMIT_WINDOW_MS,
+    });
+    if (!decision.allowed) {
+      recordDroppedMessage({
+        channel_type: event.channelType,
+        platform_id: event.platformId,
+        user_id: null,
+        sender_name: null,
+        reason: 'rate_limited',
+        messaging_group_id: null,
+        agent_group_id: null,
+      });
+      rlog.warn('Inbound message rate-limited', {
+        channelType: event.channelType,
+        platformId: event.platformId,
+        limit: decision.limit,
+        resetAtMs: decision.resetAtMs,
+      });
+      incrementCounter('router.rate_limited');
+      return;
+    }
+  }
 
   // 1. Combined lookup: messaging_group row + count of wired agents in a
   //    single query. Cheap short-circuit for the common "unwired channel"
@@ -339,6 +403,10 @@ export async function routeInbound(event: InboundEvent): Promise<void> {
       agent_group_id: null,
     });
   }
+
+  if (engagedCount > 0) incrementCounter('router.engaged', engagedCount);
+  if (accumulatedCount > 0) incrementCounter('router.accumulated', accumulatedCount);
+  observeLatency('router.route_ms', startedAt);
 }
 
 /**

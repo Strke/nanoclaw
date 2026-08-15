@@ -1,5 +1,31 @@
 // ── Central DB entities ──
 
+/**
+ * Sliding-window inbound rate limit. Keyed per (channel_type, platform_id)
+ * by the router; the limiter itself is a pure in-memory implementation in
+ * src/rate-limit.ts. Tuned from env: RATE_LIMIT_ENABLED / _MAX / _WINDOW_MS.
+ */
+export interface RateLimitConfig {
+  enabled: boolean;
+  /** Maximum messages allowed within `windowMs`. */
+  maxMessages: number;
+  /** Sliding window length in milliseconds. */
+  windowMs: number;
+}
+
+/**
+ * Inbound message deduplication. Guards against adapter redelivery and
+ * retry storms by remembering recently seen message ids for `ttlMs`.
+ * Tuned from env: DEDUPE_ENABLED / _MAX_ENTRIES / _TTL_MS.
+ */
+export interface DedupeConfig {
+  enabled: boolean;
+  /** Maximum ids retained in the LRU before eviction. */
+  maxEntries: number;
+  /** How long a seen id stays "seen" before it can pass again. */
+  ttlMs: number;
+}
+
 export interface AgentGroup {
   id: string;
   name: string;
