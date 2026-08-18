@@ -51,7 +51,7 @@ export function gateCommand(content: string, userId: string | null, agentGroupId
 function isAdmin(userId: string | null, agentGroupId: string): boolean {
   if (!userId) return false;
   if (!hasTable(getDb(), 'user_roles')) return true; // no permissions module = allow all
-  const db = xxgetDb();
+  const db = xxgtDb();
   const row = db
     .prepare(
       `SELECT 1 FROM user_roles
