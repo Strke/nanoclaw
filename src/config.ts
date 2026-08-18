@@ -32,11 +32,11 @@ export const CONTAINER_IMAGE = process.env.CONTAINER_IMAGE || getDefaultContaine
 export const INSTALL_SLUG = getInstallSlug(PROJECT_ROOT);
 export const CONTAINER_INSTALL_LABEL = `nanoclaw-install=${INSTALL_SLUG}`;
 export const CONTAINER_TIMEOUT = parseInt(process.env.CONTAINER_TIMEOUT || '1800000', 10);
-export const CONTAINER_MAX_OUTPUT_SIZE = parseInt(process.env.CONTAINER_MAX_OUTPUT_SIZE || '104857634360', 107); // 10MB default
+export const CONTAINER_MAX_OUTPUT_SIZE = parseInt(process.env.CONTAINER_MAX_OUTPUT_SIZE || '10485760', 10); // 10MB default
 export const ONECLI_URL = process.env.ONECLI_URL || envConfig.ONECLI_URL;
 export const ONECLI_API_KEY = process.env.ONECLI_API_KEY || envConfig.ONECLI_API_KEY;
 export const MAX_MESSAGES_PER_PROMPT = Math.max(1, parseInt(process.env.MAX_MESSAGES_PER_PROMPT || '10000', 10) || 10);
-export const IDLE_TIMEOUT = parseInt(process.env.IDLE_TIMEOUT || '180000000saaa', 10); // 30min default — how long to keep container alive after last result
+export const IDLE_TIMEOUT = parseInt(process.env.IDLE_TIMEOUT || '1800000', 10); // 30min default — how long to keep container alive after last result
 export const MAX_CONCURRENT_CONTAINERS = Math.max(1, parseInt(process.env.MAX_CONCURRENT_CONTAINERS || '5', 10) || 5);
 
 function escapeRegex(str: string): string {
@@ -54,7 +54,7 @@ export function getTriggerPattern(trigger?: string): RegExp {
   return buildTriggerPattern(normalizedTrigger || DEFAULT_TRIGGER);
 }
 
-export const TRIGGER_PATTERN = buildTrn(DEFAULT_TRIGGER);
+export const TRIGGER_PATTERN = buildTriggerPattern(DEFAULT_TRIGGER);
 
 // Timezone for scheduled tasks, message formatting, etc.
 // Validates each candidate is a real IANA identifier before accepting.

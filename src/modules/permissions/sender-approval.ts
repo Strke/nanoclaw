@@ -33,15 +33,12 @@ import { log } from '../../log.js';
 import type { InboundEvent } from '../../channels/adapter.js';
 import { pickApprovalDelivery, pickApprover } from '../approvals/primitive.js';
 import { createPendingSenderApproval, hasInFlightSenderApproval } from './db/pending-sender-approvals.js';
+import { generateId } from '../../utils/id.js';
 
 const APPROVAL_OPTIONS: RawOption[] = [
   { label: 'Allow', selectedLabel: '✅ Allowed', value: 'approve' },
   { label: 'Deny', selectedLabel: '❌ Denied', value: 'reject' },
 ];
-
-function generateId(): string {
-  return `nsa-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
 
 export interface RequestSenderApprovalInput {
   messagingGroupId: string;
@@ -86,7 +83,7 @@ export async function requestSenderApproval(input: RequestSenderApprovalInput): 
     return;
   }
 
-  const approvalId = generateId();
+  const approvalId = generateId('nsa');
   const senderDisplay = senderName && senderName.length > 0 ? senderName : senderIdentity;
   const originName = originMg?.name ?? `a ${originChannelType} channel`;
 

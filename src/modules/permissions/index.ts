@@ -53,6 +53,8 @@ import { hasAdminPrivilege } from './db/user-roles.js';
 import { getUser, upsertUser } from './db/users.js';
 import { requestSenderApproval } from './sender-approval.js';
 import { ensureUserDm } from './user-dm.js';
+import { safeParseContent } from '../../utils/json.js';
+import { generateId } from '../../utils/id.js';
 
 // ── Free-text name input state ──
 // Tracks approvers waiting for a text reply with the agent name. Keyed by
@@ -100,14 +102,6 @@ function extractAndUpsertUser(event: InboundEvent): string | null {
     });
   }
   return userId;
-}
-
-function safeParseContent(raw: string): { text?: string; sender?: string; senderId?: string } {
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return { text: raw };
-  }
 }
 
 function handleUnknownSender(
@@ -471,7 +465,7 @@ async function handleChannelApprovalResponse(payload: ResponsePayload): Promise<
   const engageMode: MessagingGroupAgent['engage_mode'] = isGroup ? 'mention-sticky' : 'pattern';
   const engagePattern = isGroup ? null : '.';
 
-  const mgaId = `mga-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const mgaId = generateId('mga');
   createMessagingGroupAgent({
     id: mgaId,
     messaging_group_id: row.messaging_group_id,
@@ -571,7 +565,7 @@ setMessageInterceptor(async (event: InboundEvent): Promise<boolean> => {
   const engageMode: MessagingGroupAgent['engage_mode'] = isGroup ? 'mention-sticky' : 'pattern';
   const engagePattern = isGroup ? null : '.';
 
-  const mgaId = `mga-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const mgaId = generateId('mga');
   createMessagingGroupAgent({
     id: mgaId,
     messaging_group_id: row.messaging_group_id,

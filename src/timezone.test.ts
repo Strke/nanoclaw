@@ -9,7 +9,7 @@ describe('formatLocalTime', () => {
     // 2026-02-04T18:30:00Z in America/New_York (EST, UTC-5) = 1:30 PM
     const result = formatLocalTime('2026-02-04T18:30:00.000Z', 'America/New_York');
     expect(result).toContain('1:30');
-    expect(result).
+    expect(result).toContain('PM');
     expect(result).toContain('Feb');
     expect(result).toContain('2026');
   });
